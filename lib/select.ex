@@ -31,6 +31,8 @@ defmodule Select do
   def matches?({_, _, _}, :text), do: false
   def matches?({:comment, _}, :text), do: false
   def matches?(_, :text), do: true
+  def matches?({:comment, _}, :comment), do: true
+  def matches?(_, :comment), do: false
 
   def find(nodes, matcher) when is_list(nodes) do
     Enum.flat_map(nodes, &find(&1, matcher))
