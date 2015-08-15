@@ -36,8 +36,7 @@ defmodule Select do
     Enum.flat_map(nodes, &find(&1, matcher))
   end
   def find({_, _, children} = node, matcher) do
-    if(matches?(node, matcher), do: [node], else: []) ++
-      Enum.flat_map(children, &find(&1, matcher))
+    if(matches?(node, matcher), do: [node], else: []) ++ find(children, matcher)
   end
   def find(node, matcher) do
     if(matches?(node, matcher), do: [node], else: [])
