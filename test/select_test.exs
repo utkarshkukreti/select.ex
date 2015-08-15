@@ -100,4 +100,11 @@ defmodule SelectTest do
     assert !Select.matches?({"foo", [], []}, :text)
     assert Select.matches?("foo", :text)
   end
+
+  test "find/2" do
+    node = Select.parse(@html)
+    assert 2 = Select.find(node, {:name, "li"}) |> Enum.count
+    assert 8 = Select.find(node, :element) |> Enum.count
+    assert 5 = Select.find(node, :text) |> Enum.count
+  end
 end

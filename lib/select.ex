@@ -30,4 +30,12 @@ defmodule Select do
   def matches?(_, :element), do: false
   def matches?({_, _, _}, :text), do: false
   def matches?(_, :text), do: true
+
+  def find({_, _, children} = node, matcher) do
+    if(matches?(node, matcher), do: [node], else: []) ++
+      Enum.flat_map(children, &find(&1, matcher))
+  end
+  def find(node, matcher) do
+    if(matches?(node, matcher), do: [node], else: [])
+  end
 end
