@@ -111,4 +111,12 @@ defmodule SelectTest do
     assert 8 = Select.find(node, :element) |> Enum.count
     assert 5 = Select.find(node, :text) |> Enum.count
   end
+
+  test "text/1" do
+    node = Select.parse(@html)
+    assert Select.text(node) == "A TitleAn H1A List ItemAnother List Item\n    A Text Node\n  "
+    [first, second] = Select.find(node, {:name, "li"})
+    assert Select.text(first) == "A List Item"
+    assert Select.text(second) == "Another List Item"
+  end
 end
