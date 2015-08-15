@@ -29,4 +29,9 @@ defmodule SelectTest do
 
     assert Select.parse(@html) == expected
   end
+
+  test "matches?(_, fn)" do
+    assert Select.matches?("foo", fn x -> x == "foo" end)
+    assert !Select.matches?("foo", fn x -> x == "bar" end)
+  end
 end
