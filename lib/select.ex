@@ -12,4 +12,8 @@ defmodule Select do
     attrs |> Enum.any?(fn {k, _} -> k == attr end)
   end
   def matches?(_, {:attr, _}), do: false
+  def matches?({_, attrs, _}, {:attr, attr, value}) do
+    attrs |> Enum.any?(fn {k, v} -> k == attr and v == value end)
+  end
+  def matches?(_, {:attr, _, _}), do: false
 end
