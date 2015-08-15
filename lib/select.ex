@@ -29,6 +29,7 @@ defmodule Select do
   def matches?({_, _, _}, :element), do: true
   def matches?(_, :element), do: false
   def matches?({_, _, _}, :text), do: false
+  def matches?({:comment, _}, :text), do: false
   def matches?(_, :text), do: true
 
   def find({_, _, children} = node, matcher) do

@@ -8,8 +8,10 @@ defmodule SelectTest do
     </head>
     <body>
       <h1>An H1</h1>
+      <!-- A Comment -->
       <ul>
         <li>A List Item</li>
+        <!-- Another Comment -->
         <li>Another List Item</li>
       </ul>
       A Text Node
@@ -22,8 +24,10 @@ defmodule SelectTest do
                 [{"head", [], [{"title", [], ["A Title"]}]},
                  {"body", [],
                   [{"h1", [], ["An H1"]},
+                   {:comment, " A Comment "},
                    {"ul", [],
                     [{"li", [], ["A List Item"]},
+                     {:comment, " Another Comment "},
                      {"li", [], ["Another List Item"]}]},
                    "\n    A Text Node\n  "]}]}
 
