@@ -34,4 +34,10 @@ defmodule SelectTest do
     assert Select.matches?("foo", fn x -> x == "foo" end)
     assert !Select.matches?("foo", fn x -> x == "bar" end)
   end
+
+  test "matches?(_, {:name, _})" do
+    assert Select.matches?({"foo", [], []}, {:name, "foo"})
+    assert !Select.matches?({"foo", [], []}, {:name, "bar"})
+    assert !Select.matches?("foo", {:name, "foo"})
+  end
 end
