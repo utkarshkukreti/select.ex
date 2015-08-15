@@ -90,4 +90,9 @@ defmodule SelectTest do
     assert !Select.matches?({"foo", [], []}, {:class, "foo"})
     assert !Select.matches?("foo", {:class, "foo"})
   end
+
+  test "matches?(_, :element)" do
+    assert Select.matches?({"foo", [], []}, :element)
+    assert !Select.matches?("foo", :element)
+  end
 end

@@ -26,4 +26,6 @@ defmodule Select do
     end
   end
   def matches?(_, {:class, _}), do: false
+  def matches?({_, _, _}, :element), do: true
+  def matches?(_, :element), do: false
 end
