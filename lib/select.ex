@@ -17,4 +17,5 @@ defmodule Select do
   end
   def matches?(_, {:attr, _, _}), do: false
   def matches?(node, {:and, a, b}), do: matches?(node, a) and matches?(node, b)
+  def matches?(node, {:or, a, b}), do: matches?(node, a) or matches?(node, b)
 end

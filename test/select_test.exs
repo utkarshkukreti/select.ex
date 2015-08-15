@@ -66,4 +66,12 @@ defmodule SelectTest do
     assert !Select.matches?(node, {:and, {:attr, "bar"}, {:attr, "quux"}})
     assert !Select.matches?("foo", {:and, {:name, "foo"}, {:attr, "baz"}})
   end
+
+  test "matches?(_, {:or, _, _})" do
+    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    assert Select.matches?(node, {:or, {:name, "foo"}, {:attr, "baz"}})
+    assert Select.matches?(node, {:or, {:attr, "bar"}, {:attr, "baz"}})
+    assert !Select.matches?(node, {:or, {:name, "bar"}, {:attr, "quux"}})
+    assert !Select.matches?("foo", {:or, {:name, "foo"}, {:attr, "baz"}})
+  end
 end
