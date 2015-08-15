@@ -8,4 +8,8 @@ defmodule Select do
   end
   def matches?({name, _, _}, {:name, name}), do: true
   def matches?(_, {:name, _}), do: false
+  def matches?({_, attrs, _}, {:attr, attr}) do
+    attrs |> Enum.any?(fn {k, _} -> k == attr end)
+  end
+  def matches?(_, {:attr, _}), do: false
 end
