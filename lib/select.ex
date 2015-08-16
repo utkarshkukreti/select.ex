@@ -49,6 +49,7 @@ defmodule Select do
     if(matches?(node, matcher), do: [node], else: [])
   end
 
+  def text(nodes) when is_list(nodes), do: Enum.map_join(nodes, &text/1)
   def text({_, _, children}), do: Enum.map_join(children, &text/1)
   def text({:comment, _}), do: ""
   def text(string), do: string

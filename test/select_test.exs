@@ -132,6 +132,7 @@ defmodule SelectTest do
     [first, second] = Select.find(node, {:name, "li"})
     assert Select.text(first) == "A List Item"
     assert Select.text(second) == "Another List Item"
+    assert Select.text([first, second]) == "A List ItemAnother List Item"
   end
 
   test "html/1" do
