@@ -20,18 +20,20 @@ defmodule SelectTest do
   """
 
   test "parse/1" do
-    expected = {"html", [],
-                [{"head", [], [{"title", [], ["A Title"]}]},
-                 {"body", [],
-                  [{"h1", [], ["An H1"]},
-                   {:comment, " A Comment "},
-                   {"ul", [],
-                    [{"li", [], ["A List Item"]},
-                     {:comment, " Another Comment "},
-                     {"li", [], ["Another List Item"]}]},
-                   "\n    A Text Node\n  "]}]}
-
+    expected = [{"html", [],
+                 [{"head", [], [{"title", [], ["A Title"]}]},
+                  {"body", [],
+                   [{"h1", [], ["An H1"]},
+                    {:comment, " A Comment "},
+                    {"ul", [],
+                     [{"li", [], ["A List Item"]},
+                      {:comment, " Another Comment "},
+                      {"li", [], ["Another List Item"]}]},
+                    "\n    A Text Node\n  "]}]}]
     assert Select.parse(@html) == expected
+
+    assert Select.parse("<foo></foo><bar>"), [{"foo", [], []}, {"bar", [], []}]
+    assert Select.parse("foo"), ["foo"]
   end
 
   test "matches?(_, fn)" do
