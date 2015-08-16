@@ -129,4 +129,24 @@ defmodule SelectTest do
     assert Select.text(first) == "A List Item"
     assert Select.text(second) == "Another List Item"
   end
+
+  test "html/1" do
+    node = Select.parse("<div>foo<span>bar<em>baz")
+    assert "<div>foo<span>bar<em>baz</em></span></div>" ==
+      (node
+       |> Select.html
+       |> IO.iodata_to_binary)
+    assert "<!-- foo -->" ==
+      ({:comment, " foo "}
+       |> Select.html
+       |> IO.iodata_to_binary)
+    assert "<div>foo</div><div>bar</div>" ==
+      ([{"div", [], ["foo"]}, {"div", [], ["bar"]}]
+       |> Select.html
+       |> IO.iodata_to_binary)
+    assert "foo" ==
+      ("foo"
+       |> Select.html
+       |> IO.iodata_to_binary)
+  end
 end
