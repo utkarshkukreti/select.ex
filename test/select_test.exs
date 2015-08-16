@@ -120,6 +120,10 @@ defmodule SelectTest do
                 |> Select.find({:name, "ul"})
                 |> Select.find({:name, "li"})
                 |> Enum.count)
+    assert 2 = (Select.find(node, [{:name, "ul"}, {:name, "li"}])
+                |> Enum.count)
+    assert 0 = (Select.find(node, [{:name, "li"}, {:name, "ul"}])
+                |> Enum.count)
   end
 
   test "text/1" do

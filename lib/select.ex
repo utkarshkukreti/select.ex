@@ -34,6 +34,11 @@ defmodule Select do
   def matches?({:comment, _}, :comment), do: true
   def matches?(_, :comment), do: false
 
+  def find(nodes, [_|_] = matchers) do
+    Enum.reduce matchers, nodes, fn matcher, nodes ->
+      find(nodes, matcher)
+    end
+  end
   def find(nodes, matcher) when is_list(nodes) do
     Enum.flat_map(nodes, &find(&1, matcher))
   end
