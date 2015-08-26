@@ -1,8 +1,13 @@
 defmodule Select do
   def parse(string) do
-    {"xyz", [], children} = :mochiweb_html.parse("<xyz>" <> string)
+    {"xyz", %{}, children} = do_parse(:mochiweb_html.parse("<xyz>" <> string))
     children
   end
+
+  defp do_parse({name, attrs, children}) do
+    {name, Enum.into(attrs, %{}), Enum.map(children, &do_parse/1)}
+  end
+  defp do_parse(node), do: node
 
   def matches?(node, func) when is_function(func, 1) do
     func.(node)
@@ -10,20 +15,20 @@ defmodule Select do
   def matches?({name, _, _}, {:name, name}), do: true
   def matches?(_, {:name, _}), do: false
   def matches?({_, attrs, _}, {:attr, attr}) do
-    attrs |> Enum.any?(fn {k, _} -> k == attr end)
+    Map.has_key?(attrs, attr)
   end
   def matches?(_, {:attr, _}), do: false
   def matches?({_, attrs, _}, {:attr, attr, value}) do
-    attrs |> Enum.any?(fn {k, v} -> k == attr and v == value end)
+    attrs[attr] == value
   end
   def matches?(_, {:attr, _, _}), do: false
   def matches?(node, {:and, a, b}), do: matches?(node, a) and matches?(node, b)
   def matches?(node, {:or, a, b}), do: matches?(node, a) or matches?(node, b)
   def matches?(node, {:not, a}), do: not matches?(node, a)
   def matches?({_, attrs, _}, {:class, class}) do
-    case Enum.find(attrs, fn {k, _} -> k == "class" end) do
+    case Map.get(attrs, "class") do
       nil -> false
-      {"class", classes} -> classes |> String.split |> Enum.any?(&(&1 == class))
+      classes -> classes |> String.split |> Enum.any?(&(&1 == class))
     end
   end
   def matches?(_, {:class, _}), do: false
@@ -55,7 +60,12 @@ defmodule Select do
   def text(string), do: string
 
   def html(nodes) when is_list(nodes), do: Enum.map_join(nodes, &html/1)
-  def html({_, _, _} = node), do: :mochiweb_html.to_html(node)
+  def html({_, _, _} = node), do: :mochiweb_html.to_html(do_html(node))
   def html({:comment, _} = node), do: :mochiweb_html.to_html(node)
   def html(string), do: string
+
+  defp do_html({name, attrs, children}) do
+    {name, Enum.to_list(attrs), Enum.map(children, &do_html/1)}
+  end
+  defp do_html(node), do: node
 end

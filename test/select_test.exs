@@ -20,19 +20,20 @@ defmodule SelectTest do
   """
 
   test "parse/1" do
-    expected = [{"html", [],
-                 [{"head", [], [{"title", [], ["A Title"]}]},
-                  {"body", [],
-                   [{"h1", [], ["An H1"]},
+    expected = [{"html", %{},
+                 [{"head", %{}, [{"title", %{}, ["A Title"]}]},
+                  {"body", %{},
+                   [{"h1", %{}, ["An H1"]},
                     {:comment, " A Comment "},
-                    {"ul", [],
-                     [{"li", [], ["A List Item"]},
+                    {"ul", %{},
+                     [{"li", %{}, ["A List Item"]},
                       {:comment, " Another Comment "},
-                      {"li", [], ["Another List Item"]}]},
+                      {"li", %{}, ["Another List Item"]}]},
                     "\n    A Text Node\n  "]}]}]
     assert Select.parse(@html) == expected
 
-    assert Select.parse("<foo></foo><bar>"), [{"foo", [], []}, {"bar", [], []}]
+    assert Select.parse("<foo></foo><bar>"), [{"foo", %{}, []},
+                                              {"bar", %{}, []}]
     assert Select.parse("foo"), ["foo"]
   end
 
@@ -42,13 +43,13 @@ defmodule SelectTest do
   end
 
   test "matches?(_, {:name, _})" do
-    assert Select.matches?({"foo", [], []}, {:name, "foo"})
-    assert !Select.matches?({"foo", [], []}, {:name, "bar"})
+    assert Select.matches?({"foo", %{}, []}, {:name, "foo"})
+    assert !Select.matches?({"foo", %{}, []}, {:name, "bar"})
     assert !Select.matches?("foo", {:name, "foo"})
   end
 
   test "matches?(_, {:attr, _})" do
-    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    node = {"foo", %{"bar" => "", "baz" => "quux"}, []}
     assert Select.matches?(node, {:attr, "bar"})
     assert Select.matches?(node, {:attr, "baz"})
     assert !Select.matches?(node, {:attr, "quux"})
@@ -56,7 +57,7 @@ defmodule SelectTest do
   end
 
   test "matches?(_, {:attr, _, _})" do
-    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    node = {"foo", %{"bar" => "", "baz" => "quux"}, []}
     assert Select.matches?(node, {:attr, "bar", ""})
     assert !Select.matches?(node, {:attr, "bar", "."})
     assert Select.matches?(node, {:attr, "baz", "quux"})
@@ -66,7 +67,7 @@ defmodule SelectTest do
   end
 
   test "matches?(_, {:and, _, _})" do
-    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    node = {"foo", %{"bar" => "", "baz" => "quux"}, []}
     assert Select.matches?(node, {:and, {:name, "foo"}, {:attr, "baz"}})
     assert Select.matches?(node, {:and, {:attr, "bar"}, {:attr, "baz"}})
     assert !Select.matches?(node, {:and, {:attr, "bar"}, {:attr, "quux"}})
@@ -74,7 +75,7 @@ defmodule SelectTest do
   end
 
   test "matches?(_, {:or, _, _})" do
-    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    node = {"foo", %{"bar" => "", "baz" => "quux"}, []}
     assert Select.matches?(node, {:or, {:name, "foo"}, {:attr, "baz"}})
     assert Select.matches?(node, {:or, {:attr, "bar"}, {:attr, "baz"}})
     assert !Select.matches?(node, {:or, {:name, "bar"}, {:attr, "quux"}})
@@ -82,33 +83,33 @@ defmodule SelectTest do
   end
 
   test "matches?(_, {:not, _})" do
-    node = {"foo", [{"bar", ""}, {"baz", "quux"}], []}
+    node = {"foo", %{"bar" => "", "baz" => "quux"}, []}
     assert !Select.matches?(node, {:not, {:name, "foo"}})
     assert Select.matches?(node, {:not, {:name, "bar"}})
     assert Select.matches?("foo", {:not, {:name, "foo"}})
   end
 
   test "matches?(_, {:class, _})" do
-    node = {"foo", [{"class", "bar baz"}], []}
+    node = {"foo", %{"class" => "bar baz"}, []}
     assert Select.matches?(node, {:class, "bar"})
     assert Select.matches?(node, {:class, "baz"})
     assert !Select.matches?(node, {:class, "quux"})
-    assert !Select.matches?({"foo", [], []}, {:class, "foo"})
+    assert !Select.matches?({"foo", %{}, []}, {:class, "foo"})
     assert !Select.matches?("foo", {:class, "foo"})
   end
 
   test "matches?(_, :element)" do
-    assert Select.matches?({"foo", [], []}, :element)
+    assert Select.matches?({"foo", %{}, []}, :element)
     assert !Select.matches?("foo", :element)
   end
 
   test "matches?(_, :text)" do
-    assert !Select.matches?({"foo", [], []}, :text)
+    assert !Select.matches?({"foo", %{}, []}, :text)
     assert Select.matches?("foo", :text)
   end
 
   test "matches?(_, :comment)" do
-    assert !Select.matches?({"foo", [], []}, :comment)
+    assert !Select.matches?({"foo", %{}, []}, :comment)
     assert !Select.matches?("foo", :comment)
     assert Select.matches?({:comment, ""}, :comment)
   end
@@ -148,7 +149,7 @@ defmodule SelectTest do
        |> Select.html
        |> IO.iodata_to_binary)
     assert "<div>foo</div><div>bar</div>" ==
-      ([{"div", [], ["foo"]}, {"div", [], ["bar"]}]
+      ([{"div", %{}, ["foo"]}, {"div", %{}, ["bar"]}]
        |> Select.html
        |> IO.iodata_to_binary)
     assert "foo" ==
