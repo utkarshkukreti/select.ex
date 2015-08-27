@@ -7,7 +7,9 @@ defmodule Select.Mixfile do
      elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps,
+     description: "An Elixir library to extract useful data from HTML documents, suitable for web scraping.",
+     package: package]
   end
 
   # Configuration for the OTP application
@@ -28,5 +30,11 @@ defmodule Select.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [{:mochiweb, "~> 2.12.2"}]
+  end
+
+  def package do
+    [contributors: ["Utkarsh Kukreti"],
+     licenses: ["MIT"],
+     links: %{GitHub: "https://github.com/utkarshkukreti/select.ex"}]
   end
 end
