@@ -68,4 +68,17 @@ defmodule Select do
     {name, Enum.to_list(attrs), Enum.map(children, &do_html/1)}
   end
   defp do_html(node), do: node
+
+  def prewalk(nodes, func) when is_list(nodes) and is_function(func, 1) do
+    Enum.flat_map(nodes, &prewalk(&1, func))
+  end
+  def prewalk(node, func) when is_function(func, 1) do
+    case func.(node) do
+      nil -> []
+      nodes when is_list(nodes) -> Enum.flat_map(nodes, &prewalk(&1, func))
+      {name, attrs, children} ->
+        [{name, attrs, Enum.flat_map(children, &prewalk(&1, func))}]
+      otherwise -> [otherwise]
+    end
+  end
 end

@@ -157,4 +157,33 @@ defmodule SelectTest do
        |> Select.html
        |> IO.iodata_to_binary)
   end
+
+  test "prewalk/2" do
+    nodes =
+      [{"foo", %{"unsafe" => ""},
+       ["foo",
+        {"bar", %{},
+         ["bar", {"baz", %{},
+                  ["baz"]}]}]},
+       "Hi",
+       {"unsafe", %{}, []}]
+      |> Select.prewalk(fn
+        "foo" -> nil
+        "bar" -> ["BAR", "BAR", "BAR", {"unsafe", %{}, ["This will be gone!"]}]
+        "baz" -> {"quux", %{}, ["quux"]}
+        "Hi" -> "Hi!"
+        {"unsafe", _, _} -> nil
+        {name, attrs, children} -> {name, Map.delete(attrs, "unsafe"), children}
+        otherwise -> otherwise
+      end)
+
+    assert nodes == [{"foo", %{},
+                      [{"bar", %{},
+                        ["BAR",
+                         "BAR",
+                         "BAR",
+                         {"baz", %{},
+                          [{"quux", %{}, ["quux"]}]}]}]},
+                     "Hi!"]
+  end
 end
