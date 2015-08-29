@@ -129,6 +129,16 @@ defmodule SelectTest do
                 |> Enum.count)
   end
 
+  test "filter/2" do
+    nodes = Select.parse(@html)
+            |> Select.find({:or, {:name, "li"}, {:name, "ul"}})
+    assert 2 = Select.filter(nodes, {:name, "li"}) |> Enum.count
+    assert 1 = Select.filter(nodes, {:name, "ul"}) |> Enum.count
+    [ul, _, _] = nodes
+    assert 1 = Select.filter(ul, {:name, "ul"}) |> Enum.count
+    assert 0 = Select.filter(ul, {:name, "li"}) |> Enum.count
+  end
+
   test "text/1" do
     node = Select.parse(@html)
     assert Select.text(node) == "A TitleAn H1A List ItemAnother List Item\n    A Text Node\n  "
