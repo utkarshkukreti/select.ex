@@ -1,4 +1,4 @@
-# Select
+# Select [![Build Status](https://travis-ci.org/utkarshkukreti/select.ex.svg?branch=master)](https://travis-ci.org/utkarshkukreti/select.ex)
 
 > An Elixir library to extract useful data from HTML documents, suitable for web scraping.
 
