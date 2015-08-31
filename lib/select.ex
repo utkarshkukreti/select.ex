@@ -66,7 +66,7 @@ defmodule Select do
   def text({:comment, _}), do: ""
   def text(string), do: string
 
-  def html(nodes) when is_list(nodes), do: Enum.map_join(nodes, &html/1)
+  def html(nodes) when is_list(nodes), do: Enum.map(nodes, &html/1)
   def html({_, _, _} = node), do: :mochiweb_html.to_html(do_html(node))
   def html({:comment, _} = node), do: :mochiweb_html.to_html(node)
   def html(string), do: string
