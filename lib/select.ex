@@ -25,11 +25,8 @@ defmodule Select do
   def matches?(node, {:and, a, b}), do: matches?(node, a) and matches?(node, b)
   def matches?(node, {:or, a, b}), do: matches?(node, a) or matches?(node, b)
   def matches?(node, {:not, a}), do: not matches?(node, a)
-  def matches?({_, attrs, _}, {:class, class}) do
-    case Map.get(attrs, "class") do
-      nil -> false
-      classes -> classes |> String.split |> Enum.any?(&(&1 == class))
-    end
+  def matches?({_, %{"class" => classes}, _}, {:class, class}) do
+    classes |> String.split |> Enum.any?(&(&1 == class))
   end
   def matches?(_, {:class, _}), do: false
   def matches?({_, _, _}, :element), do: true
