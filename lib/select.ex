@@ -26,7 +26,7 @@ defmodule Select do
   def matches?(node, {:or, a, b}), do: matches?(node, a) or matches?(node, b)
   def matches?(node, {:not, a}), do: not matches?(node, a)
   def matches?({_, %{"class" => classes}, _}, {:class, class}) do
-    classes |> String.split |> Enum.any?(&(&1 == class))
+    classes |> String.split |> Enum.member?(class)
   end
   def matches?(_, {:class, _}), do: false
   def matches?({_, _, _}, :element), do: true
