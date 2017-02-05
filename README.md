@@ -4,7 +4,7 @@
 
 ## Basic Usage
 
-```
+```elixir
 iex(1)> nodes = Select.parse """
 ...(1)>   <html>
 ...(1)>     <head>
